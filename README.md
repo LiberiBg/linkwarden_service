@@ -1,0 +1,12 @@
+Env (obligatoire)
+
+```
+NEXTAUTH_SECRET=VERY_SENSITIVE_SECRET
+NEXTAUTH_URL=http://localhost:3000/api/v1/auth
+POSTGRES_PASSWORD=YOUR_POSTGRES_PASSWOR
+```
+
+Env (optionnel)
+```
+NEXT_PUBLIC_DISABLE_REGISTRATION=false
+```
