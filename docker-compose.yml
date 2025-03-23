@@ -7,22 +7,37 @@ services:
       - ./data/postgres:/var/lib/postgresql/data
     networks:
       - linkwarden-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   linkwarden:
+    container_name: "linkwarden"
     env_file: .env
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
     restart: always
     image: ghcr.io/linkwarden/linkwarden:latest
-    ports:
-      - 3000:3000
+    expose:
+      - "3000"
     volumes:
       - ./data/linkwarden:/data/data
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - linkwarden-network 
+      - reverse-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.linkwarden.entrypoints=websecure"
+      #- "traefik.http.routers.linkwarden.middlewares=middleware-authelia@file"
+      - "traefik.http.routers.linkwarden.tls=true"
 
 networks:
   linkwarden-network:
     driver: bridge
+  reverse-proxy:
+    external: true
