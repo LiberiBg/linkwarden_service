@@ -34,8 +34,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.linkwarden.entrypoints=websecure"
       #- "traefik.http.routers.linkwarden.middlewares=middleware-authelia@file"
-      - "traefik.http.routers.linkwarden.tls=true"
-
+      - "traefik.http.routers.linkwarden.tls.certresolver=letsencrypt"
 networks:
   linkwarden-network:
     driver: bridge
